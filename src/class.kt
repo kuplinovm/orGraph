@@ -1,69 +1,73 @@
 import kotlin.Exception
 
-data class orGraph(val points: List<String>, val arcs: List<Pair<Pair<String, String>, Double>>) {
+data class orGraph(val points: MutableList<String>, val arcs: MutableList<Pair<Pair<String, String>, Double>>) {
 
-    fun addPoint(name: String) = points.plus(name)
+    fun addPoint(name: String, index: Int) = points.add(index, name)
 
-    fun addArc(point1: String, point2: String, weight: Double) {
+    fun addArc(point1: String, point2: String, weight: Double, index: Int) =
         if (points.contains(point1) && points.contains(point2))
-            arcs.plus(Pair(Pair(point1, point2), weight))
+            arcs.add(index, Pair(Pair(point1, point2), weight))
         else
             throw Exception()
-    }
 
-    fun removePoint(name: String) {
+    fun removePoint(name: String) =
         if (points.contains(name)) {
-            points.minus(name)
-            arcs.forEach { if (it.first.first == name || it.first.second == name) arcs.minus(it) }
+            points.remove(name)
+            for (i in arcs.size - 1 downTo 0)
+                if (arcs[i].first.first == name || arcs[i].first.second == name)
+                    arcs.removeAt(i)
         }
-        else
-            throw Exception()
-    }
+        else throw Exception()
 
-    fun renamePoint(old: String, new: String) {
+    fun renamePoint(old: String, new: String) =
         if (points.contains(old)) {
-            points.minus(old)
-            points.plus(new)
-            arcs.forEach { if (it.first.first == old) {
-                arcs.minus(it)
-                arcs.plus(Pair(Pair(new, it.first.second), it.second))
-            }
-            else if (it.first.second == old) {
-                arcs.minus(it)
-                arcs.plus(Pair(Pair(it.first.first, new), it.second))
-            }
+            points.add(points.indexOf(old), new)
+            points.remove(old)
+            for (i in arcs.size - 1 downTo 0) {
+                if (arcs[i].first.first == old) {
+                    arcs.add(i, Pair(Pair(new, arcs[i].first.second), arcs[i].second))
+                    arcs.removeAt(i + 1)
+                }
+                else if (arcs[i].first.first == old) {
+                    arcs.add(i, Pair(Pair(arcs[i].first.first, new), arcs[i].second))
+                    arcs.removeAt(i + 1)
+                }
             }
         }
         else throw Exception()
-    }
 
-    fun changeWeight (point1: String, point2: String, oldWeight: Double, newWeight: Double) {
+    fun changeWeight (point1: String, point2: String, oldWeight: Double, newWeight: Double) =
         if (points.contains(point1) && points.contains(point2))
-            arcs.forEach { if (it == Pair(Pair(point1, point2), oldWeight)) {
-                arcs.minus(it)
-                arcs.plus(Pair(Pair(point1, point2), newWeight))
+            for (i in arcs.size - 1 downTo 0) {
+                if (arcs[i] == Pair(Pair(point1, point2), oldWeight)) {
+                    arcs.add(i, Pair(Pair(point1, point2), newWeight))
+                    arcs.removeAt(i + 1)
                 }
             }
         else throw Exception()
-    }
 
-    fun listOfOutgoingArcs (name: String): List<Pair<Pair<String, String>, Double>> {
-        val res = listOf(Pair(Pair("0", "0"), 0.0))
-        if (points.contains(name))
+    fun listOfOutgoingArcs (name: String): MutableList<Pair<Pair<String, String>, Double>> {
+        val res = mutableListOf(Pair(Pair("0", "0"), 0.0))
+        if (points.contains(name)) {
             for (element in arcs)
                 if (element.first.first == name)
-                    res.plus(element)
+                    res.add(element)
+        }
         else throw Exception()
-        return res.drop(0)
+        res.removeAt(0)
+        return res
     }
 
-    fun listOfIncomingArcs (name: String): List<Pair<Pair<String, String>, Double>> {
-        val res = listOf(Pair(Pair("0", "0"), 0.0))
-        if (points.contains(name))
+    fun listOfIncomingArcs (name: String): MutableList<Pair<Pair<String, String>, Double>> {
+        val res = mutableListOf(Pair(Pair("0", "0"), 0.0))
+        if (points.contains(name)) {
             for (element in arcs)
                 if (element.first.second == name)
-                    res.plus(element)
+                    res.add(element)
+        }
         else throw Exception()
-        return res.drop(0)
+        res.removeAt(0)
+        return res
     }
+
 }
