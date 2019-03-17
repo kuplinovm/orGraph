@@ -26,7 +26,6 @@ class Tests {
         val testArcs1 = orGraph(points, mutableListOf(Pair(Pair("1", "2"), 1.3),
                                                         Pair(Pair("5", "10"), 2.0),
                                                         Pair(Pair("2", "13"), 0.6),
-                                                        //Pair(Pair("13", "5"), 1.3),
                                                         Pair(Pair("5", "13"), 1.9)))
         testArcs1.addArc("13", "5", 1.3, 3)
         assertEquals(orGraph(points, arcs), testArcs1)
