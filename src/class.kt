@@ -1,6 +1,5 @@
 import kotlin.Exception
 
-
 data class orGraph(val points: List<String>, val arcs: List<Pair<Pair<String, String>, Double>>) {
 
     fun addPoint(name: String) = points.plus(name)
@@ -35,6 +34,7 @@ data class orGraph(val points: List<String>, val arcs: List<Pair<Pair<String, St
             }
             }
         }
+        else throw Exception()
     }
 
     fun changeWeight (point1: String, point2: String, oldWeight: Double, newWeight: Double) {
@@ -67,4 +67,3 @@ data class orGraph(val points: List<String>, val arcs: List<Pair<Pair<String, St
         return res.drop(0)
     }
 }
-
