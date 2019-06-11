@@ -1,7 +1,7 @@
 import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 
-class Tests {
+/*class Tests {
     private val points = mutableListOf("1", "2", "5", "10", "13")
     private val arcs =
         mutableListOf(Pair(Pair("1", "2"), 1.3),
