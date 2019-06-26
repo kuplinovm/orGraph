@@ -75,7 +75,7 @@ data class orGraph(val points: MutableList<String>, val arcs: arcs) {
         else throw Exception()
 
     fun changeWeight (point1: String, point2: String, oldWeight: Double, newWeight: Double) =
-        if (points.contains(point1) && points.contains(point2))
+        if (points.contains(point1) && points.contains(point2) && newWeight >= 0)
             arcs.changeWeight(point1, point2, oldWeight, newWeight)
         else throw Exception()
 
